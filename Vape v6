@@ -4,8 +4,8 @@ task.spawn(function()
     repeat task.wait() until shared.VapeFullyLoaded
     getgenv().getcustomasset = shared.oldgetcustomasset -- vape bad code moment
 end)
-local CustomModules = false
-if (not getgenv) or (getgenv and type(getgenv) ~= "function") then CustomModules = true end
+local CheatEngineMode = false
+if (not getgenv) or (getgenv and type(getgenv) ~= "function") then CheatEngineMode = true end
 if getgenv and not getgenv().shared then CheatEngineMode = true; getgenv().shared = {}; end
 if getgenv and not getgenv().debug then CheatEngineMode = true; getgenv().debug = {traceback = function(string) return string end} end
 if getgenv and not getgenv().require then CheatEngineMode = true; end
@@ -24,8 +24,8 @@ local function checkExecutor()
         local suc, res = pcall(function()
             return identifyexecutor()
         end)   
-        --local blacklist = {'appleware', 'cryptic', 'delta', 'wave', 'codex', 'swift', 'solara', 'vega', 'xeno'}
-        local blacklist = {'solara', 'cryptic', '}
+        --local blacklist = {'appleware', 'cryptic', 'xeno', 'wave', 'codex', 'swift', 'solara', 'vega'}
+        local blacklist = {'solara', 'cryptic', 'exon'}
         if suc then
             for i,v in pairs(blacklist) do
                 if string.find(string.lower(tostring(res)), v) then CheatEngineMode = true end
@@ -35,7 +35,7 @@ local function checkExecutor()
 end
 task.spawn(function() pcall(checkExecutor) end)
 local function checkRequire()
-    if CustomModules then return end
+    if CheatEngineMode then return end
     local bedwarsID = {
         game = {6872274481, 8444591321, 8560631822},
         lobby = {6872265039}
@@ -50,7 +50,6 @@ local function checkRequire()
     end
 end
 --task.spawn(function() pcall(checkRequire) end)
-pcall(checkRequire)
 local function checkDebug()
     if CheatEngineMode then return end
     if not getgenv().debug then 
@@ -74,7 +73,8 @@ local function checkDebug()
 end
 --pcall(function() if game:GetService("Players").LocalPlayer.Name == "carboraga122" then game:GetService("Players").LocalPlayer:Kick("Blacklisted from erchodev#0 [Voidware Onwer]") end end)
 if (not CheatEngineMode) then checkDebug() end
-local baseDirectory = shared.RiseMode and "rise/" or "vape/"
+local RiseMode = true
+local baseDirectory = RiseMode and "rise/" or "vape/"
 if (not isfolder('vape')) then makefolder('vape') end
 if (not isfolder('rise')) then makefolder('rise') end
 shared.CheatEngineMode = shared.CheatEngineMode or CheatEngineMode
@@ -203,7 +203,7 @@ function VWFunctions.LogStats()
         local executor
         if identifyexecutor then executor = identifyexecutor() else executor = "Unknown" end
         local HWID = tostring(game:GetService("RbxAnalyticsService"):GetClientId())
-        local executors = {"solara", "fluxus", "macsploit", "hydrogen", "wave", "codex", "arceus", "delta", "vega", "cubix", "celery", "cryptic", "cacti", "appleware", "synapse", "salad", "xeno"}
+        local executors = {"solara", "fluxus", "macsploit", "hydrogen", "wave", "codex", "arceus", "delta", "vega", "xeno", "celery", "cryptic", "cacti", "appleware", "synapse", "salad"}
         if identifyexecutor then
             for i,v in pairs(executors) do
                 if string.find(string.lower(identifyexecutor()), executors[i]) then
@@ -264,7 +264,7 @@ local function install_profiles(num)
     local httpservice = game:GetService('HttpService')
     local guiprofiles = {}
     local profilesfetched
-    local repoOwner = shared.RiseMode and "VapeVoidware/RiseProfiles" or "Erchobg/VoidwareProfiles"
+    local repoOwner = RiseMode and "VapeVoidware/RiseProfiles" or "Erchobg/VoidwareProfiles"
     local function vapeGithubRequest(scripturl)
         if not isfile(baseDirectory..scripturl) then
             local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/'..repoOwner..'/main/'..scripturl, true) end)
@@ -345,7 +345,7 @@ local function are_installed_2()
 end
 if not are_installed_1() then install_profiles(1) end
 if not are_installed_2() then install_profiles(2) end
-local url = shared.RiseMode and "https://github.com/VapeVoidware/VWRise/" or "https://github.com/VapeVoidware/VoidwareBakup"
+local url = RiseMode and "https://github.com/VapeVoidware/VWRise/" or "https://github.com/VapeVoidware/VoidwareBakup"
 if not shared.VapeDeveloper then 
 	local commit = "main"
 	for i,v in pairs(game:HttpGet(url):split("\n")) do 
@@ -416,7 +416,7 @@ if not shared.VapeDeveloper then
 		error("Failed to connect to github, please try using a VPN.")
 	end
 end
-local url = shared.RiseMode and "https://github.com/VapeVoidware/VWRise/" or "https://github.com/VapeVoidware/VoidwareBakup"
+local url = RiseMode and "https://github.com/VapeVoidware/VWRise/" or "https://github.com/VapeVoidware/VoidwareBakup"
 local commit = "main"
 writefile(baseDirectory.."commithash2.txt", commit)
 for i,v in pairs(game:HttpGet(url):split("\n")) do 
@@ -427,11 +427,7 @@ for i,v in pairs(game:HttpGet(url):split("\n")) do
     end
 end
 if commit == "main" then
-    if not shared.RiseMode then
-        commit = '0725aca2e2634fd524ced0998c8ebdc90051b087'
-    else
-        commit = 'f397ece93873a0a9eb0391504b74701cf8e23d74'
-    end
+    commit = '0725aca2e2634fd524ced0998c8ebdc90051b087'
 end
 writefile(baseDirectory.."commithash2.txt", commit)
 local function vapeGithubRequest(scripturl, isImportant)
@@ -443,7 +439,7 @@ local function vapeGithubRequest(scripturl, isImportant)
         end
     end
     local suc, res
-    local url = (scripturl == "MainScript.lua" or scripturl == "GuiLibrary.lua") and shared.RiseMode and "https://raw.githubusercontent.com/VapeVoidware/VWRise/" or "https://raw.githubusercontent.com/VapeVoidware/VoidwareBakup/"
+    local url = RiseMode and "https://raw.githubusercontent.com/VapeVoidware/VWRise/" or "https://raw.githubusercontent.com/VapeVoidware/VoidwareBakup/"
     suc, res = pcall(function() return game:HttpGet(url..commit.."/"..scripturl, true) end)
     if not suc or res == "404: Not Found" then
         if isImportant then
