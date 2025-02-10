@@ -24,8 +24,8 @@ local function checkExecutor()
         local suc, res = pcall(function()
             return identifyexecutor()
         end)   
-        --local blacklist = {'appleware', 'cryptic', 'delta', 'wave', 'codex', 'swift', 'solara', 'vega'}
-        local blacklist = {'solara', 'cryptic', 'xeno'}
+        --local blacklist = {'appleware', 'cryptic', 'delta', 'wave', 'codex', 'swift', 'solara', 'vega','xeno'}
+        local blacklist = {'solara', 'cryptic',}
         if suc then
             for i,v in pairs(blacklist) do
                 if string.find(string.lower(tostring(res)), v) then CheatEngineMode = true end
@@ -203,7 +203,7 @@ function VWFunctions.LogStats()
         local executor
         if identifyexecutor then executor = identifyexecutor() else executor = "Unknown" end
         local HWID = tostring(game:GetService("RbxAnalyticsService"):GetClientId())
-        local executors = {"solara", "fluxus", "macsploit", "hydrogen", "wave", "codex", "arceus", "delta", "vega", "cubix", "celery", "cryptic", "cacti", "appleware", "synapse", "salad"}
+        local executors = {"solara", "fluxus", "macsploit", "hydrogen", "wave", "codex", "arceus", "delta", "vega", "cubix", "celery", "cryptic", "cacti", "appleware", "synapse", "salad", "xeno"}
         if identifyexecutor then
             for i,v in pairs(executors) do
                 if string.find(string.lower(identifyexecutor()), executors[i]) then
